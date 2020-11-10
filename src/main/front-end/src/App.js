@@ -18,32 +18,6 @@ const UserProfiles = () => {
     fetchUserProfiles();
   }, []);
 
-  function Dropzone({userProfileId}) {
-    const onDrop = useCallback(acceptedFiles => {
-      const file = acceptedFiles[0];
-      const formData = new FormData();
-      formData.append("file",file);
-      axios.post('http://localhost:8080/api/v1/user-profile/{userProfileId}/image/upload'),
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
-      }
-    }, [])
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
-
-    return (
-      <div {...getRootProps()}>
-        <input {...getInputProps()} />
-        {
-          isDragActive ?
-            <p>Drop the image here ...</p> :
-            <p>Drag 'n' drop profile image here, or click to select image</p>
-        }
-      </div>
-    )
-  }
 
   return userProfiles.map((userProfile, index) => {
     return (
@@ -52,13 +26,46 @@ const UserProfiles = () => {
         <br />
         <h1>{userProfile.name}</h1>
         <p>{userProfile.uuid}</p>
-        <Dropzone {...userProfile.uuid}/>
+        <Dropzone {...userProfile} />
         <br />
       </div>
     );
   });
 };
 
+
+function Dropzone({ uuid }) {
+  console.log(uuid);
+  const onDrop = useCallback(acceptedFiles => {
+    const file = acceptedFiles[0];
+    const formData = new FormData();
+    formData.append("file", file);
+    axios.post(`http://localhost:8080/api/v1/user-profile/${uuid}/image/upload`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    ).then(() => {
+      console.log("file uploaded successfully")
+    }).catch(err => {
+      console.log(err);
+    });
+  }, [])
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
+
+  return (
+    <div {...getRootProps()}>
+      <input {...getInputProps()} />
+      {
+        isDragActive ?
+          <p>Drop the image here ...</p> :
+          <p>Drag 'n' drop profile image here, or click to select image</p>
+      }
+    </div>
+  )
+}
 
 
 function App() {

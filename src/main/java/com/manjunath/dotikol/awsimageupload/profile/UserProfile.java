@@ -1,6 +1,7 @@
 package com.manjunath.dotikol.awsimageupload.profile;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 public class UserProfile {
@@ -31,8 +32,8 @@ public class UserProfile {
         this.name = name;
     }
 
-    public String getUserProfileLink() {
-        return userProfileLink;
+    public Optional<String> getUserProfileLink() {
+        return Optional.ofNullable(userProfileLink);
     }
 
     public void setUserProfileLink(String userProfileLink) {
